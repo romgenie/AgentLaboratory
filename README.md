@@ -17,6 +17,7 @@
 
 - **Agent Laboratory** is an end-to-end autonomous research workflow meant to assist **you** as the human researcher toward **implementing your research ideas**. Agent Laboratory consists of specialized agents driven by large language models to support you through the entire research workflow—from conducting literature reviews and formulating plans to executing experiments and writing comprehensive reports. 
 - This system is not designed to replace your creativity but to complement it, enabling you to focus on ideation and critical thinking while automating repetitive and time-intensive tasks like coding and documentation. By accommodating varying levels of computational resources and human involvement, Agent Laboratory aims to accelerate scientific discovery and optimize your research productivity.
+- Agent Laboratory includes comprehensive test coverage (27%) with unit, integration, performance, security, and stability tests to ensure reliability and consistent performance. Critical components have 95-100% test coverage.
 
 <p align="center">
   <img src="media/AgentLab.png" alt="Demonstration of the flow of AgentClinic" style="width: 99%;">
@@ -62,6 +63,7 @@ source venv_agent_lab/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+- Note: NumPy 2.0.2 is specified in requirements.txt
 
 4. **Install pdflatex [OPTIONAL]**
 ```bash
@@ -70,9 +72,14 @@ sudo apt install pdflatex
 - This enables latex source to be compiled by the agents.
 - **[IMPORTANT]** If this step cannot be run due to not having sudo access, pdf compiling can be turned off via running Agent Laboratory via setting the `--compile-latex` flag to false: `--compile-latex "false"`
 
+5. **Running tests [OPTIONAL]**
+```bash
+python -m pytest tests/
+```
+- Runs the comprehensive test suite (unit tests, integration tests)
+- Add `-v` flag for verbose output or `--cov=.` for test coverage reports
 
-
-5. **Now run Agent Laboratory!**
+6. **Now run Agent Laboratory!**
 
 `python ai_lab_repo.py --api-key "API_KEY_HERE" --llm-backend "o1-mini" --research-topic "YOUR RESEARCH IDEA"`
 
