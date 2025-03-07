@@ -5,7 +5,7 @@ pytest-mock==3.11.1
 pytest-timeout==2.1.0
 pytest-xdist==3.3.1
 hypothesis==6.84.2
-psutil==5.9.5
+psutil==6.1.0
 coverage==7.3.2
 
 # Dependencies for mocking and simulation
