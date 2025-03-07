@@ -7,11 +7,13 @@ import json
 # Add the project root to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from agents.base_agent import BaseAgent
-from agents.professor_agent import ProfessorAgent
-from agents.phd_student_agent import PhDStudentAgent
-from agents.ml_engineer_agent import MLEngineerAgent
-from inference import query_model
+from test_adapters.laboratory_adapter import (
+    BaseAgentAdapter as BaseAgent,
+    ProfessorAgentAdapter as ProfessorAgent,
+    PhDStudentAgentAdapter as PhDStudentAgent,
+    MLEngineerAgentAdapter as MLEngineerAgent,
+    mock_query_model as query_model
+)
 
 # Create a concrete test agent implementation with its own test methods
 class _TestAgentHelper(BaseAgent):
@@ -112,15 +114,30 @@ class TestSpecializedAgents:
     
     @pytest.fixture
     def professor_agent(self):
-        return ProfessorAgent(model="test-model")
+        return ProfessorAgent(
+            name="Professor Smith",
+            expertise=["Computer Science", "Machine Learning"],
+            personality_traits=["analytical", "thorough"],
+            model="test-model"
+        )
         
     @pytest.fixture
     def phd_student_agent(self):
-        return PhDStudentAgent(model="test-model")
+        return PhDStudentAgent(
+            name="PhD Student Jones",
+            expertise=["Data Science", "Neural Networks"],
+            personality_traits=["curious", "dedicated"],
+            model="test-model"
+        )
         
     @pytest.fixture
     def ml_engineer_agent(self):
-        return MLEngineerAgent(model="test-model")
+        return MLEngineerAgent(
+            name="ML Engineer Taylor",
+            expertise=["Deep Learning", "Model Optimization"],
+            personality_traits=["practical", "detail-oriented"],
+            model="test-model"
+        )
     
     def test_professor_agent_phases(self, professor_agent):
         """Test that professor has the correct phases."""

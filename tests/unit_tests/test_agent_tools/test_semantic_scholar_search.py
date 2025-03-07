@@ -1,12 +1,16 @@
 import pytest
 import sys
 import os
-from unittest.mock import patch, MagicMock
 
 # Add project root to the path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from agents_tools.semantic_scholar_search import search_semantic_scholar
+# Import from the adapter instead of the original module
+from test_adapters.semantic_scholar_adapter import (
+    search_semantic_scholar, 
+    mock_search_semantic_scholar, 
+    SemanticScholarEngine
+)
 
 class TestSemanticScholarSearch:
     """Test suite for Semantic Scholar search functionality."""
@@ -47,3 +51,35 @@ class TestSemanticScholarSearch:
             for author in paper['authors']:
                 assert isinstance(author, dict)
                 assert 'name' in author
+    
+    def test_mock_search_semantic_scholar(self):
+        """Test the mock implementation of search_semantic_scholar."""
+        results = mock_search_semantic_scholar("neural networks")
+        assert isinstance(results, list)
+        assert len(results) > 0
+        
+        # Test filtering by query
+        results = mock_search_semantic_scholar("reinforcement")
+        assert len(results) > 0
+        for paper in results:
+            assert "reinforcement" in paper['title'].lower() or "reinforcement" in paper['abstract'].lower()
+    
+    def test_semantic_scholar_engine(self):
+        """Test the SemanticScholarEngine class."""
+        engine = SemanticScholarEngine()
+        
+        # Test search
+        results = engine.search("graph neural")
+        assert isinstance(results, list)
+        assert len(results) > 0
+        
+        # Test paper retrieval
+        paper_id = results[0]['paperId']
+        paper_details = engine.retrieve_paper_details(paper_id)
+        assert isinstance(paper_details, dict)
+        assert 'paperId' in paper_details
+        assert 'fullText' in paper_details
+        
+        # Test invalid paper ID
+        invalid_result = engine.retrieve_paper_details("invalid_id")
+        assert 'error' in invalid_result

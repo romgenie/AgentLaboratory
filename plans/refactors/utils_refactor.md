@@ -1,74 +1,97 @@
 # Utils Refactoring Plan
 
-## Current State
-The `utils` directory contains utility modules:
-- `file_utils.py`
-- `latex_utils.py`
-- `text_utils.py`
-- `token_utils.py`
+## Overview
+- **Name**: Core Utilities Standardization
+- **Target Component**: Utility modules (`utils/`)
+- **Implementation Complexity**: Low - Focused on minimal organization improvements
+- **Timeline**: 3 days (reduced from 1 week)
+- **Business Value**: Medium - Improves code reusability and maintenance
 
-## Refactoring Goals
-1. Create a more organized and modular utility system
-2. Improve error handling and input validation
-3. Add comprehensive documentation
-4. Implement proper testing
-5. Enhance reusability across the codebase
+## Details
+- **Total Estimated LOC**: ~100 LOC (reduced from 200)
+  - New code: ~80 LOC (reduced from 150)
+  - Modified code: ~20 LOC (reduced from 50)
+  - Removed code: ~0 LOC (preserving compatibility)
 
-## Implementation Plan
+- **New Files to Create**:
+  - `utils/validation.py`: Essential validation utilities (~50 LOC)
+  - `utils/constants.py`: System-wide constants (~30 LOC)
 
-### Phase 1: Code Organization
-1. Organize utilities into logical categories
-2. Create consistent naming conventions
-3. Implement proper module documentation
-4. Add type hints throughout the codebase
+- **Files to Modify**:
+  - `utils/__init__.py`: Update exports (~10 LOC changes)
+  - `utils/file_utils.py`: Add cross-references (~5 LOC changes)
+  - `utils/text_utils.py`: Add cross-references (~5 LOC changes)
 
-### Phase 2: Enhancement
-1. Improve file utilities:
-   - Add safer file operations with error handling
-   - Implement file locking mechanisms
-   - Create better path handling
-   - Add file format validation
+## Current Issues Addressed
+1. Duplicated validation logic across modules
+2. Scattered constants and configuration values
+3. Missing documentation for common operations
 
-2. Enhance LaTeX utilities:
-   - Improve template handling
-   - Add more robust LaTeX compilation
-   - Implement better error reporting
-   - Create validation for LaTeX documents
+## Implementation Phases
+### Phase 1: Core Validation Utilities (2 days)
+- **Tasks**:
+  - Create essential validation functions
+  - Add comprehensive docstrings
+  - Ensure type hints for IDE support
+- **LOC Impact**: ~50 LOC
+- **Code Example** (simplified):
+```python
+"""Core validation utilities for the system."""
+from typing import Any, Dict, Optional
+import os
 
-3. Upgrade text utilities:
-   - Add more text processing functions
-   - Implement better text chunking mechanisms
-   - Create text sanitization functions
-   - Add support for different text formats
+def validate_file_path(path: str, must_exist: bool = True) -> str:
+    """Validate a file path and return its absolute path.
+    
+    Args:
+        path: The file path to validate
+        must_exist: Whether the file must already exist
+        
+    Returns:
+        The absolute path to the file
+        
+    Raises:
+        ValueError: If the path is invalid or the file doesn't exist
+    """
+    if not path:
+        raise ValueError("File path cannot be empty")
+        
+    abs_path = os.path.abspath(os.path.expanduser(path))
+    
+    if must_exist and not os.path.exists(abs_path):
+        raise ValueError(f"File does not exist: {abs_path}")
+        
+    return abs_path
+```
 
-4. Enhance token utilities:
-   - Improve token counting accuracy
-   - Add support for more tokenizers
-   - Implement token optimization strategies
-   - Create better token usage reporting
+### Phase 2: Constants and Cross-References (1 day)
+- **Tasks**:
+  - Consolidate common constants
+  - Add import forwarding in __init__.py
+  - Add cross-references between utility files
+- **LOC Impact**: ~50 LOC
 
-### Phase 3: Testing and Documentation
-1. Implement comprehensive unit tests for all utility functions
-2. Create usage examples for each utility
-3. Add inline documentation with examples
-4. Generate API documentation
+## Dependencies
+- **Prerequisites**: Init Files Refactor
+- **Dependents**: Most other refactors use utilities
+- **Required By**: Week 1 of refactoring effort
 
-### Phase 4: Integration
-1. Create utility registries for discoverability
-2. Implement consistent error handling across all utilities
-3. Add performance metrics and optimizations
-4. Create utility composition mechanisms
+## Backward Compatibility
+- **Breaking Changes**: None (all changes preserve existing functionality)
+- **Migration Path**: Not needed for existing code
+- **Compatibility Layer**: Use import forwarding in __init__.py
 
-## Migration Plan
-1. Implement the new utility structure alongside existing code
-2. Create compatibility layers for existing usage patterns
-3. Gradually migrate components to use the enhanced utilities
-4. Run comprehensive tests to ensure compatibility
-5. Remove deprecated implementations once all dependencies are updated
+## Risks and Mitigation
+- **Risk 1**: Breaking imports in dependent code - Use import forwarding
+- **Risk 2**: Inconsistent function signatures - Document with type hints
 
-## New Features
-1. Add configuration management utilities
-2. Implement logging utilities with different levels
-3. Create serialization utilities for various formats
-4. Add validation utilities for common data structures
-5. Implement caching utilities for performance optimization
+## Minimal Implementation Option
+Focus only on:
+1. Create validation.py with the most commonly used validations
+2. Skip constants file entirely
+
+This addresses the most critical reuse needs with minimal change.
+
+## Rollback Plan
+1. All changes preserve original functionality
+2. Can revert individual files without affecting others
