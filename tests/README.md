@@ -285,7 +285,22 @@ test_scripts = [
 ```
 
 ## CI/CD Integration
-Tests are automatically run on GitHub Actions for all pull requests and pushes to the main branch. The configuration can be found in `.github/workflows/tests.yml`.
+Tests are automatically run on GitHub Actions for all pull requests and pushes to the main branch. Two workflows are available:
+
+1. **Standard Tests**: Runs the standard test suite directly with pytest
+   - Configuration: `.github/workflows/tests.yml`
+   - Runs unit tests, integration tests, and collects coverage
+
+2. **Adapter Tests**: Runs the adapter-based test framework
+   - Configuration: `.github/workflows/adapter_tests.yml`
+   - Runs all adapter test runners sequentially
+   - Provides coverage report for components tested via adapters
+
+To set up the GitHub Actions workflows, copy the configuration files from:
+```
+tests/implementation_details/github_actions_workflow.yml -> .github/workflows/tests.yml
+tests/implementation_details/github_actions_adapter_workflow.yml -> .github/workflows/adapter_tests.yml
+```
 
 ## Test Fixtures
 Common test fixtures are defined in `conftest.py` and include:
